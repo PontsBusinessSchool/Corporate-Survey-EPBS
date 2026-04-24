@@ -1386,12 +1386,27 @@ function submitSurvey() {
   document.getElementById('survey-shell').style.display = 'none';
   const ss = document.getElementById('success-screen');
   ss.style.display = 'flex';
-  document.getElementById('success-title').textContent =
-    lang === 'fr' ? 'Merci pour votre contribution !' : 'Thank you for your contribution!';
-  document.getElementById('success-text').textContent =
-    lang === 'fr'
-      ? 'Vos réponses ont bien été enregistrées. Vous recevrez le rapport complet par e-mail dès sa publication.'
-      : 'Your responses have been recorded. You will receive the full benchmark report by email as soon as it is published.';
+
+  const wantsReport = answers['q25'] === 0;
+
+  if (wantsReport) {
+    // Wants report
+    document.getElementById('success-title').textContent =
+      lang === 'fr' ? 'Merci pour votre contribution !' : 'Thank you for your contribution!';
+    document.getElementById('success-text').innerHTML =
+      lang === 'fr'
+        ? 'Vos réponses ont bien été enregistrées. Vous recevrez le rapport complet par e-mail dès sa publication.<br><br>Merci de prendre le temps de partager vos insights — nous l'apprécions vraiment.'
+        : 'Your responses have been recorded. You will receive the full benchmark report by email as soon as it is published.<br><br>Thank you for taking the time to share your input — we really appreciate it.';
+  } else {
+    // Does not want report
+    document.getElementById('success-title').textContent =
+      lang === 'fr' ? 'Merci pour votre temps !' : 'Thank you for your time!';
+    document.getElementById('success-text').innerHTML =
+      lang === 'fr'
+        ? 'Nous apprécions vraiment que vous ayez pris le temps de répondre à cette enquête.'
+        : 'We truly appreciate you taking the time to complete this survey.';
+  }
+
   window.scrollTo(0, 0);
 
   // Send to Google Sheet
