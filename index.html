@@ -550,12 +550,85 @@ body {
 /* ═══════════════════════════════════
    RESPONSIVE
 ═══════════════════════════════════ */
-@media (max-width: 600px) {
-  .options.two-col { grid-template-columns: 1fr; }
-  .contact-grid { grid-template-columns: 1fr; }
-  .qcard { padding: 16px 14px; }
-  .lang-cards { flex-direction: column; align-items: center; }
-  .lang-card { width: 100%; max-width: 260px; }
+@media (max-width: 768px) {
+
+  /* ── LANG SCREEN ── */
+  #lang-screen { padding: 36px 16px; }
+  .lang-logo-wrap img { height: 52px; }
+  .lang-title { font-size: clamp(22px, 6vw, 34px); }
+  .lang-subtitle { font-size: 12px; margin-bottom: 32px; }
+  .lang-cards { flex-direction: column; align-items: center; gap: 12px; }
+  .lang-card { width: 100%; max-width: 320px; padding: 24px 20px; }
+  .lang-flag { font-size: 32px; }
+  .lang-name { font-size: 18px; }
+  .lang-meta { gap: 16px; margin-top: 36px; flex-wrap: wrap; justify-content: center; }
+  .lang-meta-item { font-size: 11px; }
+  .lang-rule { margin-bottom: 32px; }
+
+  /* ── TOP BAR ── */
+  .topbar-inner { padding: 8px 12px; gap: 10px; }
+  .topbar-logo img { height: 28px; }
+  .progress-label { font-size: 11px; }
+  .topbar-lang-btn { font-size: 11px; padding: 4px 8px; }
+
+  /* ── BANNER ── */
+  .survey-banner { padding: 36px 16px 48px; }
+  .banner-logo { height: 44px; }
+  .banner-title { font-size: clamp(20px, 5vw, 28px); }
+  .banner-sub { font-size: 12px; }
+
+  /* ── BODY ── */
+  .survey-body { padding: 20px 12px 80px; }
+  .intro-card { padding: 16px 16px; font-size: 13.5px; }
+
+  /* ── SECTION HEADER ── */
+  .section-head { margin: 32px 0 14px; gap: 10px; }
+  .section-label { font-size: 17px; }
+
+  /* ── QUESTION CARDS ── */
+  .qcard { padding: 18px 14px 16px; margin-bottom: 12px; }
+  .qlabel { gap: 9px; margin-bottom: 14px; }
+  .qtext { font-size: 14px; }
+  .qtype { font-size: 11px; }
+  .qnum { font-size: 9px; padding: 2px 8px; }
+
+  /* ── OPTIONS — always single column on mobile ── */
+  .options { gap: 7px; }
+  .options.two-col { grid-template-columns: 1fr; gap: 7px; }
+  .opt { padding: 11px 12px; font-size: 13px; gap: 10px; }
+  .opt-box { width: 18px; height: 18px; flex-shrink: 0; }
+
+  /* ── SCALE ── */
+  .scale-row { gap: 6px; flex-wrap: wrap; }
+  .scale-btn { width: 52px; height: 52px; font-size: 18px; border-radius: 10px; }
+  .scale-labels { font-size: 10px; }
+
+  /* ── CONTACT FORM ── */
+  .contact-grid { grid-template-columns: 1fr; gap: 10px; }
+  .cfield input { font-size: 15px; padding: 12px 14px; }
+
+  /* ── SEARCHABLE DROPDOWN ── */
+  .search-input { font-size: 15px; padding: 12px 14px; }
+  .dropdown-item { padding: 12px 14px; font-size: 14px; }
+  .dropdown-list { max-height: 240px; }
+
+  /* ── SUBMIT BUTTON ── */
+  .submit-btn { padding: 18px 24px; font-size: 15px; border-radius: 10px; }
+
+  /* ── SUCCESS ── */
+  #success-screen { padding: 40px 20px; }
+  .success-icon { width: 64px; height: 64px; font-size: 26px; }
+  .success-title { font-size: 26px; }
+  .success-text { font-size: 14px; }
+  .success-logo { height: 42px; }
+}
+
+/* Extra small phones */
+@media (max-width: 380px) {
+  .lang-card { max-width: 100%; }
+  .scale-btn { width: 46px; height: 46px; font-size: 16px; }
+  .qtext { font-size: 13.5px; }
+  .banner-title { font-size: 19px; }
 }
 
 /* searchable dropdown */
