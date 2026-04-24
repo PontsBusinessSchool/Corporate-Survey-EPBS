@@ -1283,8 +1283,10 @@ function updateProgress() {
 /* ════════════════════════════════════════════
    SUBMIT
 ════════════════════════════════════════════ */
+// ⬇️ PASTE YOUR GOOGLE APPS SCRIPT URL HERE
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwcXcWw7jyUwpU_oVdNWmC0apQpOjh8179HMtpVLrmtyHqUOPndIRMn-7zbGObzM0EF/exec';
+
 function submitSurvey() {
-  // collect data
   const payload = { lang, timestamp: new Date().toISOString(), answers };
   if (showContact) {
     payload.contact = {
@@ -1295,21 +1297,28 @@ function submitSurvey() {
       phone:   document.getElementById('c-phone')?.value,
     };
   }
-  console.log('Survey submitted:', JSON.stringify(payload, null, 2));
 
-  // show success
-  document.getElementById('survey-shell').style.display   = 'none';
+  // Show success immediately (don't make user wait for network)
+  document.getElementById('survey-shell').style.display = 'none';
   const ss = document.getElementById('success-screen');
   ss.style.display = 'flex';
-
   document.getElementById('success-title').textContent =
     lang === 'fr' ? 'Merci pour votre contribution !' : 'Thank you for your contribution!';
   document.getElementById('success-text').textContent =
     lang === 'fr'
       ? 'Vos réponses ont bien été enregistrées. Vous recevrez le rapport complet par e-mail dès sa publication.'
       : 'Your responses have been recorded. You will receive the full benchmark report by email as soon as it is published.';
-
   window.scrollTo(0, 0);
+
+  // Send data to Google Sheet in the background
+  if (SHEET_URL !== 'https://script.google.com/macros/s/AKfycbwcXcWw7jyUwpU_oVdNWmC0apQpOjh8179HMtpVLrmtyHqUOPndIRMn-7zbGObzM0EF/exec') {
+    fetch(SHEET_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).catch(err => console.error('Submission error:', err));
+  }
 }
 
 </script>
