@@ -698,16 +698,16 @@ body {
   <p class="lang-prompt">Choisissez votre langue / Choose your language</p>
 
   <div class="lang-cards">
-    <button class="lang-card" onclick="startSurvey('fr')" type="button">
+    <div class="lang-card" ontouchend="handleLangSelect(event,'fr')" onclick="handleLangSelect(event,'fr')">
       <span class="lang-flag"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzIDIiIHdpZHRoPSI1NCIgaGVpZ2h0PSIzOCI+PHJlY3Qgd2lkdGg9IjEiIGhlaWdodD0iMiIgZmlsbD0iIzAwMjM5NSIvPjxyZWN0IHg9IjEiIHdpZHRoPSIxIiBoZWlnaHQ9IjIiIGZpbGw9IiNmZmYiLz48cmVjdCB4PSIyIiB3aWR0aD0iMSIgaGVpZ2h0PSIyIiBmaWxsPSIjRUQyOTM5Ii8+PC9zdmc+" alt="FR"></span>
       <div class="lang-name">Français</div>
       <div class="lang-native">Version française</div>
-    </button>
-    <button class="lang-card" onclick="startSurvey('en')" type="button">
+    </div>
+    <div class="lang-card" ontouchend="handleLangSelect(event,'en')" onclick="handleLangSelect(event,'en')">
       <span class="lang-flag"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MCA0MCIgd2lkdGg9IjU0IiBoZWlnaHQ9IjM4Ij48cmVjdCB3aWR0aD0iNjAiIGhlaWdodD0iNDAiIGZpbGw9IiMwMTIxNjkiLz48cGF0aCBkPSJNMCwwIEw2MCw0MCBNNjAsMCBMMCw0MCIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjgiLz48cGF0aCBkPSJNMCwwIEw2MCw0MCBNNjAsMCBMMCw0MCIgc3Ryb2tlPSIjQzgxMDJFIiBzdHJva2Utd2lkdGg9IjQiLz48cGF0aCBkPSJNMzAsMCBWNDAgTTAsMjAgSDYwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMTIiLz48cGF0aCBkPSJNMzAsMCBWNDAgTTAsMjAgSDYwIiBzdHJva2U9IiNDODEwMkUiIHN0cm9rZS13aWR0aD0iOCIvPjwvc3ZnPg==" alt="GB"></span>
       <div class="lang-name">English</div>
       <div class="lang-native">English version</div>
-    </button>
+    </div>
   </div>
 
   <div class="lang-meta">
@@ -1095,16 +1095,15 @@ let showContact = false;
 /* ════════════════════════════════════════════
    BOOT
 ════════════════════════════════════════════ */
-// ensure mobile tap works
-document.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('.lang-card').forEach(function(btn) {
-    btn.addEventListener('touchend', function(e) {
-      e.preventDefault();
-      const lang = btn.getAttribute('onclick').includes("'fr'") ? 'fr' : 'en';
-      startSurvey(lang);
-    });
-  });
-});
+let _lastTap = 0;
+function handleLangSelect(e, l) {
+  e.preventDefault();
+  e.stopPropagation();
+  const now = Date.now();
+  if (now - _lastTap < 500) return; // prevent double fire
+  _lastTap = now;
+  startSurvey(l);
+}
 
 function startSurvey(l) {
   lang = l;
