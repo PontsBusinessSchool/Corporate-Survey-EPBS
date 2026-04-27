@@ -558,7 +558,7 @@ body {
   .lang-title { font-size: clamp(22px, 6vw, 34px); }
   .lang-subtitle { font-size: 12px; margin-bottom: 32px; }
   .lang-cards { flex-direction: column; align-items: center; gap: 12px; }
-  .lang-card { width: 100%; max-width: 320px; padding: 24px 20px; }
+  .lang-card { width: 100%; max-width: 320px; padding: 24px 20px; touch-action: manipulation; }
   .lang-flag { font-size: 32px; }
   .lang-name { font-size: 18px; }
   .lang-meta { gap: 16px; margin-top: 36px; flex-wrap: wrap; justify-content: center; }
@@ -698,16 +698,16 @@ body {
   <p class="lang-prompt">Choisissez votre langue / Choose your language</p>
 
   <div class="lang-cards">
-    <div class="lang-card" onclick="startSurvey('fr')">
+    <button class="lang-card" onclick="startSurvey('fr')" type="button">
       <span class="lang-flag"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzIDIiIHdpZHRoPSI1NCIgaGVpZ2h0PSIzOCI+PHJlY3Qgd2lkdGg9IjEiIGhlaWdodD0iMiIgZmlsbD0iIzAwMjM5NSIvPjxyZWN0IHg9IjEiIHdpZHRoPSIxIiBoZWlnaHQ9IjIiIGZpbGw9IiNmZmYiLz48cmVjdCB4PSIyIiB3aWR0aD0iMSIgaGVpZ2h0PSIyIiBmaWxsPSIjRUQyOTM5Ii8+PC9zdmc+" alt="FR"></span>
       <div class="lang-name">Français</div>
       <div class="lang-native">Version française</div>
-    </div>
-    <div class="lang-card" onclick="startSurvey('en')">
+    </button>
+    <button class="lang-card" onclick="startSurvey('en')" type="button">
       <span class="lang-flag"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MCA0MCIgd2lkdGg9IjU0IiBoZWlnaHQ9IjM4Ij48cmVjdCB3aWR0aD0iNjAiIGhlaWdodD0iNDAiIGZpbGw9IiMwMTIxNjkiLz48cGF0aCBkPSJNMCwwIEw2MCw0MCBNNjAsMCBMMCw0MCIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjgiLz48cGF0aCBkPSJNMCwwIEw2MCw0MCBNNjAsMCBMMCw0MCIgc3Ryb2tlPSIjQzgxMDJFIiBzdHJva2Utd2lkdGg9IjQiLz48cGF0aCBkPSJNMzAsMCBWNDAgTTAsMjAgSDYwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMTIiLz48cGF0aCBkPSJNMzAsMCBWNDAgTTAsMjAgSDYwIiBzdHJva2U9IiNDODEwMkUiIHN0cm9rZS13aWR0aD0iOCIvPjwvc3ZnPg==" alt="GB"></span>
       <div class="lang-name">English</div>
       <div class="lang-native">English version</div>
-    </div>
+    </button>
   </div>
 
   <div class="lang-meta">
@@ -1095,6 +1095,17 @@ let showContact = false;
 /* ════════════════════════════════════════════
    BOOT
 ════════════════════════════════════════════ */
+// ensure mobile tap works
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.lang-card').forEach(function(btn) {
+    btn.addEventListener('touchend', function(e) {
+      e.preventDefault();
+      const lang = btn.getAttribute('onclick').includes("'fr'") ? 'fr' : 'en';
+      startSurvey(lang);
+    });
+  });
+});
+
 function startSurvey(l) {
   lang = l;
   answers = {};
