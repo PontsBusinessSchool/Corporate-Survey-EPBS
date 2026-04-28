@@ -438,23 +438,7 @@ body {
   border-top: none; border-left: none;
   transform: rotate(45deg) translate(-1px,-1px);
 }
-/* opt-other div checked state */
-.opt-other.checked {
-  border-color: var(--royal);
-  background: var(--royal-pale);
-  color: var(--navy); font-weight: 600;
-}
-.opt-other.checked .opt-box {
-  background: var(--royal); border-color: var(--royal);
-}
-.opt-other.checked .opt-box::after {
-  content: '';
-  display: block;
-  width: 4px; height: 8px;
-  border: 2px solid white;
-  border-top: none; border-left: none;
-  transform: rotate(45deg) translate(-1px,-1px);
-}
+
 
 /* scale */
 .scale-wrap { display: flex; flex-direction: column; gap: 9px; }
@@ -700,25 +684,48 @@ body {
   border-color: rgba(192,57,43,.2);
 }
 
-.opt-other { align-items: center; flex-wrap: nowrap; cursor: pointer; }
-.other-label { white-space: nowrap; font-size: 13.5px; flex-shrink: 0; margin-right: 8px; }
+.opt-other {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 9px 13px;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  transition: all .14s;
+}
+.opt-other:hover { border-color: var(--royal); background: #f0f4ff; }
+.opt-other.checked { border-color: var(--royal); background: var(--royal-pale); font-weight: 600; }
+.opt-inner-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+  user-select: none;
+}
+.other-label {
+  white-space: nowrap;
+  font-size: 13.5px;
+  color: #374151;
+  flex-shrink: 0;
+}
+.opt-other.checked .other-label { color: var(--navy); }
 .other-input {
   border: none;
   border-bottom: 2px solid var(--royal);
   outline: none;
   font-family: 'Raleway', sans-serif;
-  font-size: 13.5px;
-  font-weight: 500;
+  font-size: 14px;
   color: var(--navy);
   background: transparent;
   flex: 1;
-  min-width: 120px;
+  min-width: 140px;
   padding: 2px 6px;
-  transition: border-color .15s, background .15s;
+  margin-left: 4px;
+  cursor: text;
 }
-.other-input::placeholder { color: var(--muted); font-weight: 400; font-style: italic; }
-.other-input:focus { border-bottom-color: var(--navy); background: rgba(255,255,255,0.6); }
-.opt:has(input:checked) .other-input { border-bottom-color: var(--royal); }
+.other-input::placeholder { color: var(--muted); font-style: italic; font-size: 13px; }
+.other-input:focus { border-bottom-color: var(--navy); }
 </style>
 </head>
 <body>
@@ -823,10 +830,11 @@ const SURVEYS = {
     },
     questions: [
       { id:"q1",  section:"A", type:"radio",    max:1, label:"Quel est le secteur d'activité principal de votre entreprise ?", hint:"Choix unique",
-        opts:["Finance / Assurance / Banque","Commerce de gros et de détail","Industrie / Production",
-              "Activités professionnelles scientifiques et techniques","Santé / Pharma / MedTech",
-              "Services aux entreprises / Conseil","Énergie / Environnement","Technologies / Digital",
-              "Construction et génie civil","Transport et logistique","Secteur public / Associatif","Autre"] },
+        opts:["Services financiers & Assurance","Énergie & Utilities","Industrie & Automobile",
+              "Commerce de détail & Distribution","Construction & Génie civil",
+              "Santé & Pharmacie","Tourisme & Hôtellerie",
+              "Aérospatiale & Défense","Technologie & Télécommunications",
+              "Services professionnels & Conseil","Autre"] },
 
       { id:"q2",  section:"A", type:"radio",    label:"Combien de salariés compte votre entreprise ?", hint:"Choix unique",
         opts:["Moins de 50","50 – 150","151 – 300","301 – 500","501 – 1 000","1 001 – 2 000","2 000 et plus"] },
@@ -975,10 +983,11 @@ const SURVEYS = {
     },
     questions: [
       { id:"q1",  section:"A", type:"radio",    label:"What is your company's primary industry?", hint:"Single choice",
-        opts:["Finance / Insurance / Banking","Wholesale & Retail Trade","Manufacturing",
-              "Professional, Scientific & Technical","Healthcare / Pharma / MedTech",
-              "Business Services / Consulting","Energy / Environment","Technology / Digital",
-              "Construction & Civil Engineering","Transportation & Logistics","Public Sector / Non-profit","Other"] },
+        opts:["Financial Services & Insurance","Energy & Utilities","Manufacturing & Automotive",
+              "Retail & Wholesale Trade","Construction & Civil Engineering",
+              "Healthcare & Pharmaceuticals","Tourism & Hospitality",
+              "Aerospace & Defence","Technology & Telecoms",
+              "Professional & Business Services","Other"] },
 
       { id:"q2",  section:"A", type:"radio",    label:"How many employees does your company have?", hint:"Single choice",
         opts:["Fewer than 50","50 – 150","151 – 300","301 – 500","501 – 1,000","1,001 – 2,000","2,000 and above"] },
@@ -1286,49 +1295,50 @@ function selectDropdown(id, label, idx) {
 
 function renderOpts(q) {
   const isMulti = q.type === 'checkbox';
-  let html = `<div class="options${q.opts && q.opts.length > 6 ? '' : ' two-col'}">`;
+  let h = `<div class="options${q.opts && q.opts.length > 6 ? '' : ' two-col'}">`;
   q.opts.forEach((o, idx) => {
     const isOther = o === 'Autre' || o === 'Other';
     const inputType = isMulti ? 'checkbox' : 'radio';
     if (isOther) {
-      const placeholder = lang === 'fr' ? 'Précisez votre réponse…' : 'Please specify…';
-      html += `<div class="opt opt-other" onclick="selectOtherOpt('${q.id}','${idx}',${q.max||99})">
-        <input type="${inputType}" name="${q.id}" value="${idx}" id="radio-${q.id}-${idx}" onchange="handleChange('${q.id}',this,${q.max||99})">
-        <span class="opt-box" id="box-${q.id}-${idx}"></span>
-        <span class="other-label">${o} :</span>
+      const ph = lang === 'fr' ? 'Précisez votre réponse…' : 'Please specify your answer…';
+      // Separate label (for the radio/checkbox) from the text input
+      // This avoids ANY label-click interference with the text field
+      h += `<div class="opt opt-other" id="div-other-${q.id}">
+        <label class="opt-inner-label" for="radio-${q.id}-${idx}" onclick="activateOther('${q.id}','${idx}',${q.max||99})">
+          <input type="${inputType}" name="${q.id}" value="${idx}"
+            id="radio-${q.id}-${idx}"
+            onchange="handleChange('${q.id}',this,${q.max||99}); document.getElementById('div-other-${q.id}').classList.add('checked');">
+          <span class="opt-box"></span>
+          <span class="other-label">${o}&nbsp;:</span>
+        </label>
         <input class="other-input" type="text"
           id="other-text-${q.id}"
-          placeholder="${placeholder}"
-          onclick="event.stopPropagation(); selectOtherOpt('${q.id}','${idx}',${q.max||99})"
-          oninput="selectOtherOpt('${q.id}','${idx}',${q.max||99})"
+          placeholder="${ph}"
+          onfocus="activateOther('${q.id}','${idx}',${q.max||99})"
         >
       </div>`;
     } else {
-      html += `<label class="opt">
+      h += `<label class="opt">
         <input type="${inputType}" name="${q.id}" value="${idx}" onchange="handleChange('${q.id}',this,${q.max||99})">
         <span class="opt-box"></span>
         ${o}
       </label>`;
     }
   });
-  html += '</div>';
-  return html;
+  h += '</div>';
+  return h;
 }
 
-function selectOtherOpt(qId, idx, max) {
+function activateOther(qId, idx, max) {
   const radio = document.getElementById('radio-' + qId + '-' + idx);
-  if (!radio) return;
+  if (!radio || radio.checked) return;
   radio.checked = true;
   handleChange(qId, radio, max);
-  // Add visual checked state to the div
-  const div = radio.closest('.opt-other');
+  const div = document.getElementById('div-other-' + qId);
   if (div) div.classList.add('checked');
-  // focus the text field
-  const textInput = document.getElementById('other-text-' + qId);
-  if (textInput && document.activeElement !== textInput) {
-    setTimeout(() => textInput.focus(), 10);
-  }
 }
+
+
 
 function renderScale(q) {
   let html = `<div class="scale-wrap"><div class="scale-row">`;
