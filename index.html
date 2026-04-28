@@ -720,34 +720,49 @@ body {
 .opt-other-row {
   cursor: pointer;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   flex-wrap: nowrap;
 }
 .other-inline {
   flex: 1;
-  min-width: 80px;
-  height: 24px;
-  min-height: 24px;
+  min-width: 100px;
+  height: 22px;
+  min-height: 22px;
   border: none;
-  border-bottom: 1.5px solid var(--royal);
+  border-bottom: 1.5px solid rgba(33,66,145,.35);
   outline: none;
   background: transparent;
   font-family: 'Raleway', sans-serif;
-  font-size: 14px;
+  font-size: 13.5px;
+  font-weight: 500;
   color: var(--navy);
   resize: none;
   overflow: hidden;
-  line-height: 1.4;
-  padding: 0 4px;
+  line-height: 1;
+  padding: 0 2px 2px;
   cursor: text;
   user-select: text !important;
   -webkit-user-select: text !important;
   pointer-events: auto !important;
   touch-action: auto !important;
   vertical-align: middle;
+  transition: border-color .15s;
 }
-.other-inline::placeholder { color: var(--muted); font-style: italic; font-size: 13px; }
-.other-inline:focus { border-bottom-color: var(--navy); background: transparent; }
+.other-inline::placeholder {
+  color: var(--muted);
+  font-style: italic;
+  font-size: 13px;
+  font-weight: 400;
+  font-family: 'Raleway', sans-serif;
+}
+.other-inline:focus {
+  border-bottom-color: var(--royal);
+  background: transparent;
+}
+.opt:has(.other-inline:focus) {
+  border-color: var(--royal);
+  background: var(--royal-pale);
+}
 </style>
 </head>
 <body>
