@@ -429,9 +429,39 @@ body {
   color: var(--navy); font-weight: 600;
 }
 .opt:has(input:checked) .other-inline {
-  color: #374151 !important;
-  font-weight: 400 !important;
-  background: transparent !important;
+  flex: 1 1 auto;
+  min-width: 120px;
+  width: auto;
+  height: 20px;
+  border: none;
+  border-bottom: 1.5px solid #214291;
+  border-radius: 0;
+  box-shadow: none;
+  outline: none;
+  background: transparent;
+  font-family: 'Raleway', sans-serif;
+  font-size: 13.5px;
+  font-weight: 400;
+  color: #374151;
+  padding: 0 4px;
+  cursor: text;
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-appearance: none;
+  appearance: none;
+  user-select: text;
+  -webkit-user-select: text;
+  pointer-events: auto;
+  touch-action: auto;
+}
+.other-inline:focus {
+  outline: none;
+  border-bottom-color: #0b2130;
+}
+.other-inline::placeholder {
+  color: #8492b0;
+  font-style: italic;
+  font-size: 13px;
 }
 .opt:has(input:checked) .opt-box {
   background: var(--royal); border-color: var(--royal);
@@ -723,49 +753,13 @@ body {
 
 /* ── Autre / Other inline textarea ── */
 .opt-other-row {
-  cursor: pointer;
+  display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  cursor: pointer;
   flex-wrap: nowrap;
 }
-.other-inline {
-  flex: 1;
-  min-width: 100px;
-  height: 22px;
-  border: none !important;
-  border-bottom: 1.5px solid var(--royal) !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  -webkit-appearance: none !important;
-  appearance: none !important;
-  outline: none !important;
-  background: transparent !important;
-  font-family: 'Raleway', sans-serif !important;
-  font-size: 13.5px !important;
-  font-weight: 400 !important;
-  color: #374151 !important;
-  padding: 0 4px !important;
-  cursor: text !important;
-  user-select: text !important;
-  -webkit-user-select: text !important;
-  pointer-events: auto !important;
-  touch-action: auto !important;
-  vertical-align: middle;
-}
-.other-inline::placeholder {
-  font-family: 'Raleway', sans-serif !important;
-  font-style: italic;
-  font-size: 13px;
-  color: var(--muted);
-}
-.other-inline:focus {
-  outline: none !important;
-  box-shadow: none !important;
-  border: none !important;
-  border-bottom: 1.5px solid var(--navy) !important;
-  background: transparent !important;
-  color: #374151 !important;
-}
+
 .opt:has(.other-inline:focus) {
   border-color: var(--royal);
   background: var(--royal-pale);
