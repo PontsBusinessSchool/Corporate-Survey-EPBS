@@ -411,15 +411,7 @@ body {
   font-size: 13.5px; color: #3a4a6a;
   transition: all .13s; user-select: none; line-height: 1.4;
 }
-/* Text inputs inside any opt row must always be typeable */
-.opt input[type="text"], .opt-other input[type="text"] {
-  cursor: text !important;
-  user-select: text !important;
-  -webkit-user-select: text !important;
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  -webkit-tap-highlight-color: rgba(0,0,0,0.1) !important;
-}
+
 .opt:hover { border-color: var(--royal); background: var(--royal-xpal); color: var(--navy); }
 .opt input { display: none; }
 .opt-box {
@@ -471,12 +463,7 @@ body {
 }
 
 /* text input for "Other" */
-.other-input {
-  border: none; outline: none;
-  font-family: 'Raleway', sans-serif; font-size: 13px;
-  color: var(--text); background: transparent;
-  flex: 1; min-width: 80px;
-}
+
 
 /* contact form */
 .contact-note {
@@ -704,20 +691,8 @@ body {
 }
 .opt-other:hover { border-color: var(--royal); background: #f0f4ff; }
 .opt-other.checked { border-color: var(--royal); background: var(--royal-pale); font-weight: 600; }
-.opt-inner-label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  flex-shrink: 0;
-  user-select: none;
-}
-.other-label {
-  white-space: nowrap;
-  font-size: 13.5px;
-  color: #374151;
-  flex-shrink: 0;
-}
+
+
 .opt-other.checked .other-label { color: var(--navy); }
 .other-input {
   border: none;
@@ -731,18 +706,46 @@ body {
   min-width: 140px;
   padding: 2px 6px;
   margin-left: 4px;
-  /* Override inherited opt properties that block typing */
-  cursor: text !important;
-  user-select: text !important;
-  -webkit-user-select: text !important;
-  pointer-events: auto !important;
-  touch-action: auto !important;
-  -webkit-tap-highlight-color: auto !important;
-  position: relative;
-  z-index: 10;
+  
+
+
+
+/* ── Other / Autre free-text field ─────────────────── */
+.other-field-wrap {
+  margin-top: 8px;
+  grid-column: 1 / -1;
 }
-.other-input::placeholder { color: var(--muted); font-style: italic; font-size: 13px; }
-.other-input:focus { border-bottom-color: var(--navy); outline: none; }
+.other-textarea {
+  width: 100%;
+  min-height: 60px;
+  padding: 10px 14px;
+  border: 2px solid var(--royal);
+  border-radius: 8px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 14px;
+  color: var(--navy);
+  background: #fff;
+  resize: vertical;
+  line-height: 1.5;
+  transition: border-color .15s;
+  box-sizing: border-box;
+  /* Explicit reset — no inheritance issues */
+  user-select: text;
+  -webkit-user-select: text;
+  cursor: text;
+  pointer-events: auto;
+  touch-action: auto;
+}
+.other-textarea:focus {
+  outline: none;
+  border-color: var(--navy);
+  box-shadow: 0 0 0 3px rgba(33,66,145,.1);
+}
+.other-textarea::placeholder {
+  color: var(--muted);
+  font-style: italic;
+  font-size: 13px;
+}
 </style>
 </head>
 <body>
@@ -1312,48 +1315,56 @@ function selectDropdown(id, label, idx) {
 
 function renderOpts(q) {
   const isMulti = q.type === 'checkbox';
+  const inputType = isMulti ? 'checkbox' : 'radio';
   let h = `<div class="options${q.opts && q.opts.length > 6 ? '' : ' two-col'}">`;
+
   q.opts.forEach((o, idx) => {
     const isOther = o === 'Autre' || o === 'Other';
-    const inputType = isMulti ? 'checkbox' : 'radio';
-    if (isOther) {
-      const ph = lang === 'fr' ? 'Précisez votre réponse…' : 'Please specify your answer…';
-      // Separate label (for the radio/checkbox) from the text input
-      // This avoids ANY label-click interference with the text field
-      h += `<div class="opt opt-other" id="div-other-${q.id}">
-        <label class="opt-inner-label" for="radio-${q.id}-${idx}" onclick="activateOther('${q.id}','${idx}',${q.max||99})">
-          <input type="${inputType}" name="${q.id}" value="${idx}"
-            id="radio-${q.id}-${idx}"
-            onchange="handleChange('${q.id}',this,${q.max||99}); document.getElementById('div-other-${q.id}').classList.add('checked');">
-          <span class="opt-box"></span>
-          <span class="other-label">${o}&nbsp;:</span>
-        </label>
-        <input class="other-input" type="text"
-          id="other-text-${q.id}"
-          placeholder="${ph}"
-          onfocus="activateOther('${q.id}','${idx}',${q.max||99})"
-        >
-      </div>`;
-    } else {
-      h += `<label class="opt">
-        <input type="${inputType}" name="${q.id}" value="${idx}" onchange="handleChange('${q.id}',this,${q.max||99})">
-        <span class="opt-box"></span>
-        ${o}
-      </label>`;
-    }
+    h += `<label class="opt">
+      <input type="${inputType}" name="${q.id}" value="${idx}"
+        onchange="handleChange('${q.id}',this,${q.max||99})${isOther ? `;toggleOtherField('${q.id}',this)` : ''}">
+      <span class="opt-box"></span>
+      ${o}
+    </label>`;
   });
+
   h += '</div>';
+
+  // Separate text field shown below when Other is selected
+  const ph = lang === 'fr' ? 'Veuillez préciser votre réponse…' : 'Please specify your answer…';
+  h += `<div class="other-field-wrap" id="other-wrap-${q.id}" style="display:none">
+    <textarea
+      class="other-textarea"
+      id="other-text-${q.id}"
+      placeholder="${ph}"
+      rows="2"
+      oninput="storeOtherText('${q.id}')"
+    ></textarea>
+  </div>`;
+
   return h;
 }
 
-function activateOther(qId, idx, max) {
-  const radio = document.getElementById('radio-' + qId + '-' + idx);
-  if (!radio || radio.checked) return;
-  radio.checked = true;
-  handleChange(qId, radio, max);
-  const div = document.getElementById('div-other-' + qId);
-  if (div) div.classList.add('checked');
+function toggleOtherField(qId, el) {
+  const wrap = document.getElementById('other-wrap-' + qId);
+  if (!wrap) return;
+  if (el.checked) {
+    wrap.style.display = 'block';
+    setTimeout(() => {
+      const ta = document.getElementById('other-text-' + qId);
+      if (ta) ta.focus();
+    }, 50);
+  } else {
+    wrap.style.display = 'none';
+  }
 }
+
+function storeOtherText(qId) {
+  const ta = document.getElementById('other-text-' + qId);
+  if (ta) answers['other_' + qId] = ta.value;
+}
+
+
 
 
 
