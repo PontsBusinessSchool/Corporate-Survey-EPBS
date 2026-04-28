@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EPBS — Enquête Formation 2026 / Corporate Education Survey 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600&family=Poppins:wght@700&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════
    BRAND TOKENS — École des Ponts BS
@@ -91,7 +91,7 @@ body {
 }
 
 .lang-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Poppins', sans-serif; font-weight: 700;
   font-size: clamp(26px, 4.5vw, 44px);
   font-weight: 600;
   color: var(--navy);
@@ -168,7 +168,7 @@ body {
 }
 .lang-flag img { width: 54px; height: 38px; object-fit: cover; border-radius: 4px; }
 .lang-name {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Poppins', sans-serif; font-weight: 700;
   font-size: 20px;
   font-weight: 600;
   color: var(--navy);
@@ -294,7 +294,7 @@ body {
   position: relative;
 }
 .banner-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Poppins', sans-serif; font-weight: 700;
   font-size: clamp(24px, 3.5vw, 36px);
   font-weight: 600;
   color: var(--white);
@@ -355,7 +355,7 @@ body {
   flex-shrink: 0;
 }
 .section-label {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Poppins', sans-serif; font-weight: 700;
   font-size: 19px; font-weight: 600;
   color: var(--navy);
   border-bottom: 2px solid var(--royal);
@@ -430,6 +430,23 @@ body {
   background: var(--royal); border-color: var(--royal);
 }
 .opt:has(input:checked) .opt-box::after {
+  content: '';
+  display: block;
+  width: 4px; height: 8px;
+  border: 2px solid white;
+  border-top: none; border-left: none;
+  transform: rotate(45deg) translate(-1px,-1px);
+}
+/* opt-other div checked state */
+.opt-other.checked {
+  border-color: var(--royal);
+  background: var(--royal-pale);
+  color: var(--navy); font-weight: 600;
+}
+.opt-other.checked .opt-box {
+  background: var(--royal); border-color: var(--royal);
+}
+.opt-other.checked .opt-box::after {
   content: '';
   display: block;
   width: 4px; height: 8px;
@@ -538,7 +555,7 @@ body {
 }
 .success-logo { height: 56px; width: auto; margin: 0 auto 24px; display: block; }
 .success-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Poppins', sans-serif; font-weight: 700;
   font-size: 34px; font-weight: 600;
   color: var(--navy); margin-bottom: 12px;
 }
@@ -681,6 +698,26 @@ body {
   color: #c0392b;
   border-color: rgba(192,57,43,.2);
 }
+
+.opt-other { align-items: center; flex-wrap: nowrap; cursor: pointer; }
+.other-label { white-space: nowrap; font-size: 13.5px; flex-shrink: 0; margin-right: 8px; }
+.other-input {
+  border: none;
+  border-bottom: 2px solid var(--royal);
+  outline: none;
+  font-family: 'Raleway', sans-serif;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--navy);
+  background: transparent;
+  flex: 1;
+  min-width: 120px;
+  padding: 2px 6px;
+  transition: border-color .15s, background .15s;
+}
+.other-input::placeholder { color: var(--muted); font-weight: 400; font-style: italic; }
+.other-input:focus { border-bottom-color: var(--navy); background: rgba(255,255,255,0.6); }
+.opt:has(input:checked) .other-input { border-bottom-color: var(--royal); }
 </style>
 </head>
 <body>
@@ -692,7 +729,7 @@ body {
   </div>
 
   <h1 class="lang-title">Enquête sur la formation en entreprise</h1>
-  <p class="lang-subtitle">Corporate Education Benchmark Survey 2026</p>
+  <p class="lang-subtitle">Corporate Education Survey 2026</p>
   <div class="lang-rule"></div>
 
   <p class="lang-prompt">Choisissez votre langue / Choose your language</p>
@@ -786,7 +823,7 @@ const SURVEYS = {
     questions: [
       { id:"q1",  section:"A", type:"radio",    max:1, label:"Quel est le secteur d'activité principal de votre entreprise ?", hint:"Choix unique",
         opts:["Finance / Assurance / Banque","Commerce de gros et de détail","Industrie / Production",
-              "Activités professionnelles, scientifiques et techniques","Santé / Pharma / MedTech",
+              "Activités professionnelles scientifiques et techniques","Santé / Pharma / MedTech",
               "Services aux entreprises / Conseil","Énergie / Environnement","Technologies / Digital",
               "Construction et génie civil","Transport et logistique","Secteur public / Associatif","Autre"] },
 
@@ -1252,16 +1289,44 @@ function renderOpts(q) {
   q.opts.forEach((o, idx) => {
     const isOther = o === 'Autre' || o === 'Other';
     const inputType = isMulti ? 'checkbox' : 'radio';
-    html += `<label class="opt">
-      <input type="${inputType}" name="${q.id}" value="${idx}" onchange="handleChange('${q.id}',this,${q.max||99})">
-      <span class="opt-box"></span>
-      ${isOther
-        ? `${o} : <input class="other-input" type="text" placeholder="${lang==='fr'?'Précisez…':'Specify…'}" onclick="event.stopPropagation()">`
-        : o}
-    </label>`;
+    if (isOther) {
+      const placeholder = lang === 'fr' ? 'Précisez votre réponse…' : 'Please specify…';
+      html += `<div class="opt opt-other" onclick="selectOtherOpt('${q.id}','${idx}',${q.max||99})">
+        <input type="${inputType}" name="${q.id}" value="${idx}" id="radio-${q.id}-${idx}" onchange="handleChange('${q.id}',this,${q.max||99})">
+        <span class="opt-box" id="box-${q.id}-${idx}"></span>
+        <span class="other-label">${o} :</span>
+        <input class="other-input" type="text"
+          id="other-text-${q.id}"
+          placeholder="${placeholder}"
+          onclick="event.stopPropagation(); selectOtherOpt('${q.id}','${idx}',${q.max||99})"
+          oninput="selectOtherOpt('${q.id}','${idx}',${q.max||99})"
+        >
+      </div>`;
+    } else {
+      html += `<label class="opt">
+        <input type="${inputType}" name="${q.id}" value="${idx}" onchange="handleChange('${q.id}',this,${q.max||99})">
+        <span class="opt-box"></span>
+        ${o}
+      </label>`;
+    }
   });
   html += '</div>';
   return html;
+}
+
+function selectOtherOpt(qId, idx, max) {
+  const radio = document.getElementById('radio-' + qId + '-' + idx);
+  if (!radio) return;
+  radio.checked = true;
+  handleChange(qId, radio, max);
+  // Add visual checked state to the div
+  const div = radio.closest('.opt-other');
+  if (div) div.classList.add('checked');
+  // focus the text field
+  const textInput = document.getElementById('other-text-' + qId);
+  if (textInput && document.activeElement !== textInput) {
+    setTimeout(() => textInput.focus(), 10);
+  }
 }
 
 function renderScale(q) {
@@ -1478,7 +1543,7 @@ function submitSurvey() {
       lang === 'fr' ? 'Merci pour votre contribution !' : 'Thank you for your contribution!';
     document.getElementById('success-text').innerHTML =
       lang === 'fr'
-        ? 'Vos réponses ont bien été enregistrées. Vous recevrez le rapport complet par e-mail dès sa publication.<br><br>Merci de prendre le temps de partager vos insights — nous l\'apprécions vraiment.'
+        ? 'Vos réponses ont bien été enregistrées. Vous recevrez le rapport complet par e-mail dès sa publication.<br><br>Merci de prendre le temps de partager vos insights — nous l\'apprécions vraiment — merci d\'avoir partagé votre opinion.'
         : 'Your responses have been recorded. You will receive the full benchmark report by email as soon as it is published.<br><br>Thank you for taking the time to share your input — we really appreciate it.';
   } else {
     // Does not want report
