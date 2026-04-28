@@ -411,6 +411,15 @@ body {
   font-size: 13.5px; color: #3a4a6a;
   transition: all .13s; user-select: none; line-height: 1.4;
 }
+/* Text inputs inside any opt row must always be typeable */
+.opt input[type="text"], .opt-other input[type="text"] {
+  cursor: text !important;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  -webkit-tap-highlight-color: rgba(0,0,0,0.1) !important;
+}
 .opt:hover { border-color: var(--royal); background: var(--royal-xpal); color: var(--navy); }
 .opt input { display: none; }
 .opt-box {
@@ -722,10 +731,18 @@ body {
   min-width: 140px;
   padding: 2px 6px;
   margin-left: 4px;
-  cursor: text;
+  /* Override inherited opt properties that block typing */
+  cursor: text !important;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  pointer-events: auto !important;
+  touch-action: auto !important;
+  -webkit-tap-highlight-color: auto !important;
+  position: relative;
+  z-index: 10;
 }
 .other-input::placeholder { color: var(--muted); font-style: italic; font-size: 13px; }
-.other-input:focus { border-bottom-color: var(--navy); }
+.other-input:focus { border-bottom-color: var(--navy); outline: none; }
 </style>
 </head>
 <body>
