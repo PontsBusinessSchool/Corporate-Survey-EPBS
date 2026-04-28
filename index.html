@@ -1353,17 +1353,16 @@ function renderOpts(q) {
           style="pointer-events:none">
         <span class="opt-box" id="box-${q.id}-${idx}"></span>
         <span style="white-space:nowrap;flex-shrink:0;">${o} :</span>
-        <textarea
+        <input type="text"
           id="other-text-${q.id}"
           class="other-inline"
           placeholder="${ph}"
-          rows="1"
           onclick="event.stopPropagation()"
           onkeydown="event.stopPropagation()"
           onkeyup="event.stopPropagation()"
           oninput="event.stopPropagation(); storeOtherText('${q.id}')"
           onfocus="event.stopPropagation(); document.getElementById('radio-${q.id}-${idx}').checked=true; handleChange('${q.id}',document.getElementById('radio-${q.id}-${idx}'),${q.max||99})"
-        ></textarea>
+        >
       </label>`;
     } else {
       h += `<label class="opt">
